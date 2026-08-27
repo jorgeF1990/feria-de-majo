@@ -1,7 +1,9 @@
 import axios from 'axios';
 
+const API_URL = 'https://feria-de-majo.onrender.com/api';
+
 const apiClient = axios.create({
-  baseURL: import.meta.env.VITE_API_URL || 'http://localhost:5000/api',
+  baseURL: API_URL,
   headers: {
     'Content-Type': 'application/json',
   },
