@@ -116,6 +116,7 @@ const Header = () => {
     { value: 'm', label: 'M' },
     { value: 'l', label: 'L' },
     { value: 'xl', label: 'XL' },
+    { value: 'xxl', label: 'XXL' },
     { value: 'unico', label: 'Único' }
   ];
 

@@ -36,7 +36,7 @@ const productSchema = new mongoose.Schema({
     type: String,
     required: [true, 'El talle es obligatorio'],
     enum: {
-      values: ['s', 'm', 'l', 'xl', 'unico'],
+      values: ['s', 'm', 'l', 'xl', 'xxl', 'unico'],
       message: 'Talle no válido'
     }
   },
