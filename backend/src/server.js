@@ -22,17 +22,40 @@ app.use(helmet({
 app.use(compression());
 app.use(morgan('dev'));
 
+// CONFIGURACIÓN DE CORS MEJORADA
+const corsOptions = {
+  origin: function (origin, callback) {
+    // Permitir peticiones sin origen (como Postman)
+    if (!origin) return callback(null, true);
+    
+    // Obtener los orígenes permitidos desde .env
+    const allowedOrigins = process.env.CORS_ORIGIN ? process.env.CORS_ORIGIN.split(',') : ['http://localhost:3000'];
+    
+    if (allowedOrigins.indexOf(origin) !== -1 || process.env.CORS_ORIGIN === '*') {
+      callback(null, true);
+    } else {
+      callback(new Error('No permitido por CORS'));
+    }
+  },
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization']
+};
+
+//app.use(cors(corsOptions));  // Cambiar esta línea
 app.use(cors({
-  origin: process.env.CORS_ORIGIN || 'http://localhost:3000',
+  origin: '*', // Permitir todos los orígenes temporalmente
   credentials: true
 }));
 
-// Rate limiting - AUMENTAR EL LÍMITE PARA DESARROLLO
+
+
+// Rate limiting
 const limiter = rateLimit({
-  windowMs: 1 * 60 * 1000, // 1 minuto
-  max: 100, // 100 peticiones por minuto (antes era 100 en 15 minutos)
+  windowMs: 1 * 60 * 1000,
+  max: 100,
   message: 'Demasiadas peticiones, intenta más tarde',
-  skip: () => process.env.NODE_ENV === 'development' // Saltar en desarrollo
+  skip: () => process.env.NODE_ENV === 'development'
 });
 app.use('/api', limiter);
 
