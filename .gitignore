@@ -5,4 +5,4 @@ vercel-deploy/
 .env
 .env.local
 .DS_Store
-*.log
+*.logfrontend/vercel-deploy/
