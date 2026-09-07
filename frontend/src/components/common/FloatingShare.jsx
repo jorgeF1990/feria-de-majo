@@ -9,15 +9,22 @@ import {
   TwitterIcon,
   EmailIcon,
 } from 'react-share';
-import { FiShare2, FiX } from 'react-icons/fi';
+import { FiShare2, FiX, FiMapPin, FiCalendar, FiClock } from 'react-icons/fi';
 
 const FloatingShare = () => {
   const [isOpen, setIsOpen] = useState(false);
   const url = typeof window !== 'undefined' ? window.location.href : '';
   
-  // Mensaje ACTUALIZADO sin URL al final
   const title = 'Feria de Majo - Descubrí piezas con la mejor calidad y precio';
-  const message = `Descubrí piezas con la mejor calidad y precio\n\nPrendas usadas de marca, en excelente estado y con la mejor calidad. Encontra piezas únicas con estilo y a precios increíbles. Te esperamos el sábado 19 de septiembre en nuestra feria.\n\n📍 Feria de Majo\n📅 Sábado 19 de septiembre\n🕐 11:00 a 18:00 hs`;
+  const message = `Descubrí piezas con la mejor calidad y precio
+
+Prendas usadas de marca, en excelente estado y con la mejor calidad. Encontra piezas únicas con estilo y a precios increíbles. Te esperamos el sábado 19 de septiembre en nuestra feria.
+
+Feria de Majo
+Sábado 19 de septiembre
+11:00 a 18:00 hs
+
+${url}`;
 
   return (
     <div className="fixed bottom-6 right-6 z-50">
