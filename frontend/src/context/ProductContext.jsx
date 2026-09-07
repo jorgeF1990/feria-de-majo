@@ -8,6 +8,7 @@ export const ProductProvider = ({ children }) => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [filters, setFilters] = useState({});
+  const [selectedProductId, setSelectedProductId] = useState(null);
   const initialLoadDone = useRef(false);
 
   const fetchProducts = useCallback(async () => {
@@ -43,6 +44,20 @@ export const ProductProvider = ({ children }) => {
       setFilters({ ...filters, [key]: value });
     }
   }, [filters]);
+
+  // Producto seleccionado
+  const selectedProduct = useMemo(() => {
+    if (!selectedProductId) return null;
+    return products.find(p => p._id === selectedProductId) || null;
+  }, [products, selectedProductId]);
+
+  const setSelectedProduct = useCallback((id) => {
+    setSelectedProductId(id);
+  }, []);
+
+  const clearSelectedProduct = useCallback(() => {
+    setSelectedProductId(null);
+  }, []);
 
   const filteredProducts = useMemo(() => {
     let result = [...products];
@@ -89,6 +104,9 @@ export const ProductProvider = ({ children }) => {
     updateFilter,
     filteredProducts,
     refetch: fetchProducts,
+    selectedProduct,
+    setSelectedProduct,
+    clearSelectedProduct,
   };
 
   return (

@@ -5,12 +5,14 @@ export const useModal = () => {
   const [selectedProduct, setSelectedProduct] = useState(null);
 
   const openModal = useCallback((product) => {
+    console.log(' Abriendo modal para:', product?.nombre);
     setSelectedProduct(product);
     setIsOpen(true);
     document.body.style.overflow = 'hidden';
   }, []);
 
   const closeModal = useCallback(() => {
+    console.log(' Cerrando modal');
     setIsOpen(false);
     setSelectedProduct(null);
     document.body.style.overflow = 'unset';

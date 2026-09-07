@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { FiX, FiChevronLeft, FiChevronRight, FiCalendar, FiShare2 } from 'react-icons/fi';
+import { FiX, FiChevronLeft, FiChevronRight, FiCalendar } from 'react-icons/fi';
 import ShareButtons from '../common/ShareButtons';
 
 const ProductModal = ({ isOpen, onClose, product }) => {
@@ -17,7 +17,9 @@ const ProductModal = ({ isOpen, onClose, product }) => {
     };
   }, [isOpen]);
 
-  if (!isOpen || !product) return null;
+  if (!isOpen || !product) {
+    return null;
+  }
 
   const {
     nombre,
@@ -62,7 +64,7 @@ const ProductModal = ({ isOpen, onClose, product }) => {
         onClick={(e) => e.stopPropagation()}
       >
         <div className="flex flex-col md:flex-row h-full">
-          {/* Imagen - Responsive */}
+          {/* Imagen */}
           <div className="relative md:w-3/5 bg-secondary-light/20">
             <div className="aspect-square md:aspect-auto md:h-[400px] lg:h-[500px] flex items-center justify-center p-2 sm:p-4">
               {imageList.length > 0 ? (
@@ -86,7 +88,6 @@ const ProductModal = ({ isOpen, onClose, product }) => {
               )}
             </div>
 
-            {/* Controles del carrusel - Responsive */}
             {imageList.length > 1 && (
               <>
                 <button
@@ -115,7 +116,6 @@ const ProductModal = ({ isOpen, onClose, product }) => {
               </>
             )}
 
-            {/* Badge estado - Responsive */}
             {estado !== 'disponible' && (
               <div className={`absolute top-2 sm:top-4 right-2 sm:right-4 text-white px-2 sm:px-4 py-1 sm:py-2 rounded-lg font-semibold uppercase text-[10px] sm:text-sm tracking-wider border border-white/20 backdrop-blur-sm ${
                 estado === 'reservado' ? 'bg-amber-600/80' : 'bg-gray-600/80'
@@ -125,7 +125,7 @@ const ProductModal = ({ isOpen, onClose, product }) => {
             )}
           </div>
 
-          {/* Información - Responsive */}
+          {/* Información */}
           <div className="md:w-2/5 p-4 sm:p-6 md:p-8 overflow-y-auto max-h-[40vh] md:max-h-none">
             <div className="flex justify-between items-start mb-3 sm:mb-4">
               <div>
@@ -145,26 +145,26 @@ const ProductModal = ({ isOpen, onClose, product }) => {
             </div>
 
             <div className="space-y-3 sm:space-y-4">
-              {/* Info de la feria - Responsive */}
               <div className="bg-primary/5 rounded-lg p-2.5 sm:p-4 border border-primary/10">
                 <div className="flex items-center gap-1.5 sm:gap-2 text-primary">
                   <FiCalendar className="text-sm sm:text-lg" />
                   <span className="font-semibold text-xs sm:text-sm">Feria de Majo</span>
                 </div>
                 <p className="text-text-secondary text-[10px] sm:text-sm mt-0.5 sm:mt-1">
-                  19 y 20 de septiembre · 2026
+                  Sabado 19 de septiembre · 2026
+                </p>
+                <p className="text-text-secondary text-[10px] sm:text-sm">
+                  Horario: 11:00 a 18:00 hs
                 </p>
                 <p className="text-text-light text-[8px] sm:text-xs mt-0.5 sm:mt-1">
-                  Consultá disponibilidad en el stand
+                  Consulta disponibilidad en el stand
                 </p>
               </div>
 
-              {/* Descripción */}
               <p className="text-text-secondary text-xs sm:text-sm md:text-base leading-relaxed">
                 {descripcion}
               </p>
 
-              {/* Detalles - Responsive */}
               <div className="grid grid-cols-2 gap-1.5 sm:gap-3 py-2 sm:py-3 border-y border-secondary-light/30">
                 <div>
                   <span className="text-[8px] sm:text-xs text-text-light uppercase tracking-wider">Talle</span>
@@ -191,7 +191,6 @@ const ProductModal = ({ isOpen, onClose, product }) => {
                 </div>
               </div>
 
-              {/* Comentario */}
               {comentario && (
                 <div className="bg-secondary-light/20 rounded-lg p-2.5 sm:p-4">
                   <span className="text-[8px] sm:text-xs text-text-light uppercase tracking-wider block mb-0.5 sm:mb-1">
@@ -201,7 +200,6 @@ const ProductModal = ({ isOpen, onClose, product }) => {
                 </div>
               )}
 
-              {/* Botones de compartir y acción - Responsive */}
               <div className="space-y-2 sm:space-y-3">
                 <ShareButtons product={product} className="flex-wrap gap-1.5 sm:gap-2" />
                 <button className="w-full btn-primary text-center text-xs sm:text-sm py-2 sm:py-3">

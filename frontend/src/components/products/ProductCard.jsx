@@ -1,7 +1,9 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import { FiMaximize2, FiTag } from 'react-icons/fi';
 
 const ProductCard = ({ product, onClick }) => {
+  const navigate = useNavigate();
   const {
     nombre,
     descripcion,
@@ -41,12 +43,15 @@ const ProductCard = ({ product, onClick }) => {
     return null;
   };
 
+  const handleCardClick = () => {
+    navigate(`/producto/${product._id}`);
+  };
+
   return (
     <div 
       className="group bg-white rounded-xl overflow-hidden shadow-soft hover:shadow-hard transition-all duration-300 hover:-translate-y-1 cursor-pointer"
-      onClick={() => onClick(product)}
+      onClick={handleCardClick}
     >
-      {/* Imagen con aspecto cuadrado perfecto */}
       <div className="relative aspect-square bg-secondary-light/20 overflow-hidden">
         {getImageUrl() ? (
           <img
@@ -69,14 +74,12 @@ const ProductCard = ({ product, onClick }) => {
           </div>
         )}
         
-        {/* Badges - Responsive */}
         {nuevo && (
           <span className="absolute top-2 sm:top-3 left-2 sm:left-3 bg-primary text-white text-[10px] sm:text-xs font-semibold px-2 sm:px-3 py-0.5 sm:py-1 rounded-full">
             Nuevo
           </span>
         )}
         
-        {/* Status Overlay */}
         {estado !== 'disponible' && (
           <div className="absolute inset-0 bg-black/30 backdrop-blur-[2px] flex items-center justify-center">
             <span className={`text-white font-bold text-xs sm:text-base uppercase tracking-widest px-3 sm:px-6 py-1.5 sm:py-3 rounded-lg border-2 border-white/30 backdrop-blur-sm ${
@@ -87,12 +90,11 @@ const ProductCard = ({ product, onClick }) => {
           </div>
         )}
 
-        {/* Ver detalles - Visible en hover desktop, siempre visible en mobile con transparencia */}
         <button 
           className="absolute bottom-2 sm:bottom-4 left-1/2 -translate-x-1/2 bg-white/90 backdrop-blur-sm text-text-primary px-2 sm:px-4 py-1 sm:py-2 rounded-full text-[10px] sm:text-sm font-medium opacity-0 group-hover:opacity-100 transition-all duration-300 hover:bg-white shadow-medium flex items-center gap-1 sm:gap-2"
           onClick={(e) => {
             e.stopPropagation();
-            onClick(product);
+            navigate(`/producto/${product._id}`);
           }}
         >
           <FiMaximize2 className="text-[10px] sm:text-sm" />
@@ -101,7 +103,6 @@ const ProductCard = ({ product, onClick }) => {
         </button>
       </div>
 
-      {/* Información - Responsive */}
       <div className="p-2 sm:p-3 md:p-4">
         <div className="flex items-start justify-between gap-1 sm:gap-2">
           <h3 className="font-medium text-text-primary text-xs sm:text-sm md:text-base line-clamp-1 flex-1">

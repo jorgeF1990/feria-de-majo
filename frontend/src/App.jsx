@@ -1,16 +1,16 @@
 import React, { useRef } from 'react';
-import { Routes, Route, useNavigate } from 'react-router-dom';
+import { Routes, Route, useNavigate, useParams } from 'react-router-dom';
 import { ProductProvider } from './context/ProductContext';
 import { AuthProvider } from './context/AuthContext';
 import { useProducts } from './hooks/useProducts';
 import { useAuth } from './hooks/useAuth';
-import { useModal } from './hooks/useModal';
 import Header from './components/common/Header';
 import Footer from './components/common/Footer';
 import ProductGrid from './components/products/ProductGrid';
 import ProductModal from './components/products/ProductModal';
 import Admin from './pages/Admin';
 import FloatingShare from './components/common/FloatingShare';
+import WelcomeModal from './components/common/WelcomeModal';
 import { 
   FiArrowRight, 
   FiSettings, 
@@ -20,14 +20,71 @@ import {
   FiClock
 } from 'react-icons/fi';
 
+// Componente para producto individual
+const ProductDetail = () => {
+  const { id } = useParams();
+  const { products, loading } = useProducts();
+  const navigate = useNavigate();
+  const [isProcessing, setIsProcessing] = React.useState(false);
+
+  React.useEffect(() => {
+    if (isProcessing || loading) return;
+    
+    const product = products.find(p => p._id === id);
+    if (product) {
+      setIsProcessing(true);
+      localStorage.setItem('selectedProduct', JSON.stringify(product));
+      navigate('/', { replace: true });
+    } else if (!loading) {
+      navigate('/', { replace: true });
+    }
+  }, [id, products, loading, navigate, isProcessing]);
+
+  if (loading && !isProcessing) {
+    return (
+      <div className="flex items-center justify-center min-h-screen">
+        <div className="text-center">
+          <div className="w-12 h-12 border-4 border-primary border-t-transparent rounded-full animate-spin mx-auto"></div>
+          <p className="mt-4 text-text-secondary">Cargando producto...</p>
+        </div>
+      </div>
+    );
+  }
+
+  return null;
+};
+
+// Componente principal
 const HomeContent = () => {
   const { filteredProducts, loading } = useProducts();
-  const { isOpen, openModal, closeModal, selectedProduct } = useModal();
   const { isAuthenticated, isAdmin } = useAuth();
   const navigate = useNavigate();
   const productGridRef = useRef(null);
+  const [isModalOpen, setIsModalOpen] = React.useState(false);
+  const [selectedProduct, setSelectedProduct] = React.useState(null);
 
-  // Scroll a la sección de productos
+  React.useEffect(() => {
+    const savedProduct = localStorage.getItem('selectedProduct');
+    if (savedProduct) {
+      const product = JSON.parse(savedProduct);
+      setSelectedProduct(product);
+      setIsModalOpen(true);
+      localStorage.removeItem('selectedProduct');
+    }
+  }, []);
+
+  const openModal = (product) => {
+    setSelectedProduct(product);
+    setIsModalOpen(true);
+    document.body.style.overflow = 'hidden';
+  };
+
+  const closeModal = () => {
+    setIsModalOpen(false);
+    setSelectedProduct(null);
+    document.body.style.overflow = 'unset';
+  };
+
   const scrollToProducts = () => {
     if (productGridRef.current) {
       productGridRef.current.scrollIntoView({ 
@@ -41,6 +98,9 @@ const HomeContent = () => {
     <div className="min-h-screen flex flex-col bg-background">
       <Header />
       
+      {/* Welcome Modal - Se muestra al entrar */}
+      <WelcomeModal />
+
       <main className="flex-1 container-custom py-8">
         <div className="flex justify-end mb-4">
           {isAuthenticated ? (
@@ -75,7 +135,7 @@ const HomeContent = () => {
               <div className="inline-flex items-center gap-3 bg-white/20 backdrop-blur-sm rounded-full px-4 py-2 mb-6 border border-white/10">
                 <FiCalendar className="text-white/80" />
                 <span className="text-sm font-medium tracking-wide">
-                  Septiembre 2026
+                  Sábado 19 de septiembre · 2026
                 </span>
                 <FiMapPin className="text-white/80 ml-2" />
                 <span className="text-sm font-light">Feria de Majo</span>
@@ -89,7 +149,7 @@ const HomeContent = () => {
               <p className="text-white/80 text-lg font-light mb-8 max-w-xl">
                 Prendas usadas de marca, en excelente estado y con la mejor calidad. 
                 Encontra piezas únicas con estilo y a precios increíbles. 
-                 Te esperamos en septiembre en nuestra feria. Horarios a consultar.
+                Te esperamos el sábado 19 de septiembre en nuestra feria.
               </p>
 
               <button 
@@ -109,15 +169,15 @@ const HomeContent = () => {
             <div className="w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-3">
               <FiCalendar className="text-primary text-xl" />
             </div>
-            <h4 className="font-medium text-text-primary">Septiembre 2026</h4>
-            <p className="text-text-secondary text-sm">Fecha a confirmar</p>
+            <h4 className="font-medium text-text-primary">Sábado 19 de septiembre</h4>
+            <p className="text-text-secondary text-sm">2026</p>
           </div>
           <div className="bg-white rounded-xl shadow-soft p-6 text-center hover:shadow-medium transition-all">
             <div className="w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-3">
               <FiClock className="text-primary text-xl" />
             </div>
-            <h4 className="font-medium text-text-primary">Horario a consultar</h4>
-            <p className="text-text-secondary text-sm">Te avisaremos pronto</p>
+            <h4 className="font-medium text-text-primary">11:00 a 18:00 hs</h4>
+            <p className="text-text-secondary text-sm">Horario corrido</p>
           </div>
           <div className="bg-white rounded-xl shadow-soft p-6 text-center hover:shadow-medium transition-all">
             <div className="w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-3">
@@ -128,7 +188,7 @@ const HomeContent = () => {
           </div>
         </div>
 
-        {/* Product Grid con ref para scroll */}
+        {/* Product Grid */}
         <div ref={productGridRef}>
           <ProductGrid
             products={filteredProducts}
@@ -140,8 +200,10 @@ const HomeContent = () => {
 
       <Footer />
       <FloatingShare />
+      
+      {/* Modal de producto */}
       <ProductModal
-        isOpen={isOpen}
+        isOpen={isModalOpen}
         onClose={closeModal}
         product={selectedProduct}
       />
@@ -181,6 +243,7 @@ function App() {
       <ProductProvider>
         <Routes>
           <Route path="/" element={<HomeContent />} />
+          <Route path="/producto/:id" element={<ProductDetail />} />
           <Route path="/admin" element={<AdminWrapper />} />
         </Routes>
       </ProductProvider>
