@@ -14,8 +14,10 @@ import { FiShare2, FiX } from 'react-icons/fi';
 const FloatingShare = () => {
   const [isOpen, setIsOpen] = useState(false);
   const url = typeof window !== 'undefined' ? window.location.href : '';
-  const title = 'Feria de Majo - 19 y 20 de septiembre de 2026';
-  const message = `Feria de Majo\n\n19 y 20 de septiembre de 2026\n\nModa artesanal con alma. Prendas únicas confeccionadas con materiales nobles.\n\n${url}`;
+  
+  // Mensaje ACTUALIZADO sin URL al final
+  const title = 'Feria de Majo - Descubrí piezas con la mejor calidad y precio';
+  const message = `Descubrí piezas con la mejor calidad y precio\n\nPrendas usadas de marca, en excelente estado y con la mejor calidad. Encontra piezas únicas con estilo y a precios increíbles. Te esperamos el sábado 19 de septiembre en nuestra feria.\n\n📍 Feria de Majo\n📅 Sábado 19 de septiembre\n🕐 11:00 a 18:00 hs`;
 
   return (
     <div className="fixed bottom-6 right-6 z-50">
