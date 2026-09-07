@@ -9,7 +9,7 @@ import {
   TwitterIcon,
   EmailIcon,
 } from 'react-share';
-import { FiShare2, FiX, FiMapPin, FiCalendar, FiClock } from 'react-icons/fi';
+import { FiShare2, FiX } from 'react-icons/fi';
 
 const FloatingShare = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -20,9 +20,11 @@ const FloatingShare = () => {
 
 Prendas usadas de marca, en excelente estado y con la mejor calidad. Encontra piezas únicas con estilo y a precios increíbles. Te esperamos el sábado 19 de septiembre en nuestra feria.
 
-Feria de Majo
-Sábado 19 de septiembre
-11:00 a 18:00 hs
+─────────────────
+📍 *Feria de Majo*
+📅 *Sábado 19 de septiembre*
+🕐 *11:00 a 18:00 hs*
+─────────────────
 
 ${url}`;
 

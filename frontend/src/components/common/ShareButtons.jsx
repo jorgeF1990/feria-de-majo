@@ -19,9 +19,38 @@ const ShareButtons = ({ product, className = '' }) => {
   
   const title = `${product.nombre} - Feria de Majo`;
 
-  const whatsappMessage = `*${product.nombre}*\n\n${product.descripcion}\n\nCategoría: ${product.categoria}\nTalle: ${product.talle.toUpperCase()}\nColor: ${product.color}${product.material ? `\nMaterial: ${product.material}` : ''}\n\nFeria de Majo\nSábado 19 de septiembre\n11:00 a 18:00 hs\n\n${productUrl}`;
+  const whatsappMessage = `*${product.nombre}*
 
-  const emailBody = `Te comparto esta prenda de la Feria de Majo:\n\n${product.nombre}\n${product.descripcion}\n\nCategoría: ${product.categoria}\nTalle: ${product.talle.toUpperCase()}\nColor: ${product.color}${product.material ? `\nMaterial: ${product.material}` : ''}\n\nFeria de Majo\nSábado 19 de septiembre\n11:00 a 18:00 hs\n\n${productUrl}`;
+${product.descripcion}
+
+📋 *Categoría:* ${product.categoria}
+👕 *Talle:* ${product.talle.toUpperCase()}
+🎨 *Color:* ${product.color}${product.material ? `\n🧵 *Material:* ${product.material}` : ''}
+
+─────────────────
+📍 *Feria de Majo*
+📅 *Sábado 19 de septiembre*
+🕐 *11:00 a 18:00 hs*
+─────────────────
+
+${productUrl}`;
+
+  const emailBody = `Te comparto esta prenda de la Feria de Majo:
+
+${product.nombre}
+${product.descripcion}
+
+Categoría: ${product.categoria}
+Talle: ${product.talle.toUpperCase()}
+Color: ${product.color}${product.material ? `\nMaterial: ${product.material}` : ''}
+
+─────────────────
+📍 Feria de Majo
+📅 Sábado 19 de septiembre
+🕐 11:00 a 18:00 hs
+─────────────────
+
+${productUrl}`;
 
   return (
     <div className={`flex flex-wrap items-center gap-2 ${className}`}>
