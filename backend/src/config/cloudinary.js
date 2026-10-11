@@ -3,12 +3,6 @@ import dotenv from 'dotenv';
 
 dotenv.config();
 
-console.log('Cloudinary Config Backend:', {
-  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
-  api_key: process.env.CLOUDINARY_API_KEY ? '***' : 'missing',
-  api_secret: process.env.CLOUDINARY_API_SECRET ? '***' : 'missing'
-});
-
 cloudinary.config({
   cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
   api_key: process.env.CLOUDINARY_API_KEY,
@@ -20,7 +14,7 @@ export const uploadImage = async (file, folder = 'feria-de-majo') => {
     const result = await cloudinary.uploader.upload(file, {
       folder: folder,
       transformation: [
-        { width: 800, height: 800, crop: 'limit', quality: 'auto' },
+        { width: 800, height: 800, crop: 'limit', quality: 'auto:good' },
         { fetch_format: 'auto' }
       ]
     });

@@ -7,9 +7,7 @@ import {
   FiSave, 
   FiImage, 
   FiCloud,
-  FiLoader,
-  FiMenu,
-  FiChevronDown
+  FiLoader
 } from 'react-icons/fi';
 import { getProducts, createProduct, updateProduct, deleteProduct, updateProductStatus } from '../api/products';
 import { uploadMultipleToCloudinary } from '../api/upload';
@@ -23,7 +21,6 @@ const Admin = () => {
   const [editingProduct, setEditingProduct] = useState(null);
   const [uploading, setUploading] = useState(false);
   const [uploadProgress, setUploadProgress] = useState(0);
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const fileInputRef = useRef(null);
   const [formData, setFormData] = useState({
     nombre: '',
@@ -207,7 +204,6 @@ const Admin = () => {
   return (
     <div className="min-h-screen bg-background pb-8">
       <div className="container-custom py-4 sm:py-8">
-        {/* Header responsive */}
         <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-3 sm:gap-4 mb-4 sm:mb-6">
           <h1 className="text-xl sm:text-2xl font-semibold text-text-primary text-center sm:text-left">
             Panel de Administración
@@ -221,9 +217,7 @@ const Admin = () => {
           </button>
         </div>
 
-        {/* Tabla responsive con scroll horizontal */}
         <div className="bg-white rounded-xl shadow-soft overflow-hidden">
-          {/* Vista desktop - Tabla */}
           <div className="hidden md:block overflow-x-auto">
             <table className="w-full">
               <thead className="bg-secondary-light/30">
@@ -246,6 +240,7 @@ const Admin = () => {
                             src={product.imagenes[0]}
                             alt={product.nombre}
                             className="w-10 h-10 rounded object-cover"
+                            loading="lazy"
                             onError={(e) => {
                               e.target.style.display = 'none';
                             }}
@@ -273,11 +268,13 @@ const Admin = () => {
                         className={`text-xs font-semibold px-3 py-1 rounded-full border-0 focus:ring-2 focus:ring-primary ${
                           product.estado === 'disponible' ? 'bg-emerald-50 text-emerald-700' :
                           product.estado === 'reservado' ? 'bg-amber-50 text-amber-700' :
+                          product.estado === 'vendido' ? 'bg-blue-50 text-blue-700' :
                           'bg-gray-100 text-gray-600'
                         }`}
                       >
                         <option value="disponible">Disponible</option>
                         <option value="reservado">Reservado</option>
+                        <option value="vendido">Vendido</option>
                         <option value="archivado">Archivado</option>
                       </select>
                     </td>
@@ -303,7 +300,6 @@ const Admin = () => {
             </table>
           </div>
 
-          {/* Vista mobile - Tarjetas */}
           <div className="md:hidden divide-y divide-secondary-light/30">
             {products.map((product) => (
               <div key={product._id} className="p-4 hover:bg-secondary-light/5 transition-colors">
@@ -313,6 +309,7 @@ const Admin = () => {
                       src={product.imagenes[0]}
                       alt={product.nombre}
                       className="w-16 h-16 rounded-lg object-cover flex-shrink-0"
+                      loading="lazy"
                       onError={(e) => {
                         e.target.style.display = 'none';
                       }}
@@ -335,11 +332,13 @@ const Admin = () => {
                         className={`text-xs font-semibold px-2 py-0.5 rounded-full border-0 focus:ring-2 focus:ring-primary ${
                           product.estado === 'disponible' ? 'bg-emerald-50 text-emerald-700' :
                           product.estado === 'reservado' ? 'bg-amber-50 text-amber-700' :
+                          product.estado === 'vendido' ? 'bg-blue-50 text-blue-700' :
                           'bg-gray-100 text-gray-600'
                         }`}
                       >
                         <option value="disponible">Disponible</option>
                         <option value="reservado">Reservado</option>
+                        <option value="vendido">Vendido</option>
                         <option value="archivado">Archivado</option>
                       </select>
                       <span className="text-xs text-text-light flex items-center gap-1">
@@ -381,7 +380,6 @@ const Admin = () => {
           )}
         </div>
 
-        {/* Modal - Responsive */}
         {isModalOpen && (
           <div className="fixed inset-0 z-[100] flex items-center justify-center p-2 sm:p-4 bg-black/60 backdrop-blur-sm">
             <div className="bg-white rounded-2xl max-w-2xl w-full max-h-[95vh] sm:max-h-[90vh] overflow-y-auto shadow-hard">
@@ -557,6 +555,7 @@ const Admin = () => {
                               src={url}
                               alt={`Imagen ${index + 1}`}
                               className="w-full h-full object-cover rounded-lg border border-secondary-light/30"
+                              loading="lazy"
                             />
                             <button
                               type="button"
@@ -624,6 +623,7 @@ const Admin = () => {
                     >
                       <option value="disponible">Disponible</option>
                       <option value="reservado">Reservado</option>
+                      <option value="vendido">Vendido</option>
                       <option value="archivado">Archivado</option>
                     </select>
                   </div>

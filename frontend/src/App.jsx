@@ -20,7 +20,6 @@ import {
   FiClock
 } from 'react-icons/fi';
 
-// Componente para producto individual
 const ProductDetail = () => {
   const { id } = useParams();
   const { products, loading } = useProducts();
@@ -54,7 +53,6 @@ const ProductDetail = () => {
   return null;
 };
 
-// Componente principal
 const HomeContent = () => {
   const { filteredProducts, loading } = useProducts();
   const { isAuthenticated, isAdmin } = useAuth();
@@ -98,7 +96,6 @@ const HomeContent = () => {
     <div className="min-h-screen flex flex-col bg-background">
       <Header />
       
-      {/* Welcome Modal - Se muestra al entrar */}
       <WelcomeModal />
 
       <main className="flex-1 container-custom py-8">
@@ -119,7 +116,6 @@ const HomeContent = () => {
           )}
         </div>
 
-        {/* Hero Banner */}
         <section className="relative rounded-xl overflow-hidden mb-8">
           <div className="absolute inset-0 bg-gradient-to-r from-primary-dark via-primary to-primary-light">
             <div className="absolute inset-0 opacity-10" style={{
@@ -135,7 +131,7 @@ const HomeContent = () => {
               <div className="inline-flex items-center gap-3 bg-white/20 backdrop-blur-sm rounded-full px-4 py-2 mb-6 border border-white/10">
                 <FiCalendar className="text-white/80" />
                 <span className="text-sm font-medium tracking-wide">
-                  Sábado 19 de septiembre · 2026
+                  Sábado 17 de octubre · 2026
                 </span>
                 <FiMapPin className="text-white/80 ml-2" />
                 <span className="text-sm font-light">Feria de Majo</span>
@@ -149,7 +145,7 @@ const HomeContent = () => {
               <p className="text-white/80 text-lg font-light mb-8 max-w-xl">
                 Prendas usadas de marca, en excelente estado y con la mejor calidad. 
                 Encontra piezas únicas con estilo y a precios increíbles. 
-                Te esperamos el sábado 19 de septiembre en nuestra feria.
+                Te esperamos el sábado 17 de octubre en nuestra feria.
               </p>
 
               <button 
@@ -163,13 +159,12 @@ const HomeContent = () => {
           </div>
         </section>
 
-        {/* Info rápida */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
           <div className="bg-white rounded-xl shadow-soft p-6 text-center hover:shadow-medium transition-all">
             <div className="w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-3">
               <FiCalendar className="text-primary text-xl" />
             </div>
-            <h4 className="font-medium text-text-primary">Sábado 19 de septiembre</h4>
+            <h4 className="font-medium text-text-primary">Sábado 17 de octubre</h4>
             <p className="text-text-secondary text-sm">2026</p>
           </div>
           <div className="bg-white rounded-xl shadow-soft p-6 text-center hover:shadow-medium transition-all">
@@ -188,7 +183,6 @@ const HomeContent = () => {
           </div>
         </div>
 
-        {/* Product Grid */}
         <div ref={productGridRef}>
           <ProductGrid
             products={filteredProducts}
@@ -201,7 +195,6 @@ const HomeContent = () => {
       <Footer />
       <FloatingShare />
       
-      {/* Modal de producto */}
       <ProductModal
         isOpen={isModalOpen}
         onClose={closeModal}
@@ -211,7 +204,6 @@ const HomeContent = () => {
   );
 };
 
-// Componente AdminWrapper para proteger la ruta
 const AdminWrapper = () => {
   const { isAuthenticated, isAdmin } = useAuth();
   const navigate = useNavigate();

@@ -491,6 +491,17 @@ const Header = () => {
                       Reservado
                     </button>
                     <button
+                      onClick={() => handleFilterChange('estado', 'vendido')}
+                      className={`px-2 sm:px-4 py-0.5 sm:py-1.5 rounded-full text-[8px] sm:text-xs font-medium transition-all flex items-center gap-0.5 sm:gap-1.5 ${
+                        filters?.estado === 'vendido'
+                          ? 'bg-blue-500 text-white shadow-lg shadow-blue-500/30'
+                          : 'bg-white/10 text-white/80 hover:bg-white/20'
+                      }`}
+                    >
+                      <span className={`w-1.5 h-1.5 sm:w-2 sm:h-2 rounded-full ${filters?.estado === 'vendido' ? 'bg-white' : 'bg-blue-400'}`}></span>
+                      Vendido
+                    </button>
+                    <button
                       onClick={() => handleFilterChange('estado', 'archivado')}
                       className={`px-2 sm:px-4 py-0.5 sm:py-1.5 rounded-full text-[8px] sm:text-xs font-medium transition-all flex items-center gap-0.5 sm:gap-1.5 ${
                         filters?.estado === 'archivado'
@@ -517,6 +528,7 @@ const Header = () => {
                             color: colors.find(c => c.value === value)?.label || value,
                             estado: value === 'disponible' ? 'Disponible' : 
                                      value === 'reservado' ? 'Reservado' : 
+                                     value === 'vendido' ? 'Vendido' : 
                                      value === 'archivado' ? 'Archivado' : value
                           };
                           const label = labels[key] || value;

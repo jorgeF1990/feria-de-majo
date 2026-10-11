@@ -29,7 +29,7 @@ ${product.descripcion}
 
 ─────────────────
 📍 *Feria de Majo*
-📅 *Sábado 19 de septiembre*
+📅 *Sábado 17 de octubre*
 🕐 *11:00 a 18:00 hs*
 ─────────────────
 
@@ -46,7 +46,7 @@ Color: ${product.color}${product.material ? `\nMaterial: ${product.material}` : 
 
 ─────────────────
 📍 Feria de Majo
-📅 Sábado 19 de septiembre
+📅 Sábado 17 de octubre
 🕐 11:00 a 18:00 hs
 ─────────────────
 

@@ -15,45 +15,29 @@ const PORT = process.env.PORT || 5000;
 
 connectDB();
 
+// Compresión GZIP para respuestas más rápidas
+app.use(compression({
+  level: 6,
+  threshold: 1024
+}));
+
 app.use(helmet({
   crossOriginResourcePolicy: { policy: "cross-origin" }
 }));
 
-app.use(compression());
 app.use(morgan('dev'));
 
-// CONFIGURACIÓN DE CORS MEJORADA
-const corsOptions = {
-  origin: function (origin, callback) {
-    // Permitir peticiones sin origen (como Postman)
-    if (!origin) return callback(null, true);
-    
-    // Obtener los orígenes permitidos desde .env
-    const allowedOrigins = process.env.CORS_ORIGIN ? process.env.CORS_ORIGIN.split(',') : ['http://localhost:3000'];
-    
-    if (allowedOrigins.indexOf(origin) !== -1 || process.env.CORS_ORIGIN === '*') {
-      callback(null, true);
-    } else {
-      callback(new Error('No permitido por CORS'));
-    }
-  },
+app.use(cors({
+  origin: '*',
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization']
-};
-
-//app.use(cors(corsOptions));  // Cambiar esta línea
-app.use(cors({
-  origin: '*', // Permitir todos los orígenes temporalmente
-  credentials: true
 }));
-
-
 
 // Rate limiting
 const limiter = rateLimit({
   windowMs: 1 * 60 * 1000,
-  max: 100,
+  max: 200,
   message: 'Demasiadas peticiones, intenta más tarde',
   skip: () => process.env.NODE_ENV === 'development'
 });

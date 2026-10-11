@@ -1,8 +1,31 @@
 import Product from '../models/Product.js';
+import { uploadMultipleImages } from '../config/cloudinary.js';
+
+// Cache en memoria para reducir consultas a MongoDB
+let productsCache = null;
+let cacheTimestamp = null;
+const CACHE_DURATION = 60000; // 60 segundos
+
+const clearCache = () => {
+  productsCache = null;
+  cacheTimestamp = null;
+};
 
 export const getProducts = async (req, res) => {
   try {
-    const { categoria, talle, color, estado, destacado, search, limit = 50, page = 1 } = req.query;
+    const now = Date.now();
+    
+    // Usar cache si está disponible y es reciente
+    if (productsCache && cacheTimestamp && (now - cacheTimestamp) < CACHE_DURATION) {
+      res.set('Cache-Control', 'public, max-age=60');
+      return res.json({
+        success: true,
+        data: productsCache,
+        fromCache: true
+      });
+    }
+
+    const { categoria, talle, color, estado, destacado, search, limit = 100, page = 1 } = req.query;
 
     const query = {};
 
@@ -25,10 +48,23 @@ export const getProducts = async (req, res) => {
     }
 
     const [products, total] = await Promise.all([
-      Product.find(query).sort(sort).skip(skip).limit(limitNum).lean(),
-      Product.countDocuments(query)
+      Product.find(query)
+        .sort(sort)
+        .skip(skip)
+        .limit(limitNum)
+        .select('-__v')
+        .lean()
+        .exec(),
+      Product.countDocuments(query).exec()
     ]);
 
+    // Guardar en cache solo si no hay filtros
+    if (Object.keys(query).length === 0) {
+      productsCache = products;
+      cacheTimestamp = now;
+    }
+
+    res.set('Cache-Control', 'public, max-age=60');
     res.json({
       success: true,
       data: products,
@@ -40,7 +76,6 @@ export const getProducts = async (req, res) => {
       }
     });
   } catch (error) {
-    console.error('Error en getProducts:', error);
     res.status(500).json({
       success: false,
       message: 'Error al obtener los productos',
@@ -51,7 +86,7 @@ export const getProducts = async (req, res) => {
 
 export const getProductById = async (req, res) => {
   try {
-    const product = await Product.findById(req.params.id).lean();
+    const product = await Product.findById(req.params.id).select('-__v').lean();
     
     if (!product) {
       return res.status(404).json({
@@ -65,7 +100,6 @@ export const getProductById = async (req, res) => {
       data: product
     });
   } catch (error) {
-    console.error('Error en getProductById:', error);
     res.status(500).json({
       success: false,
       message: 'Error al obtener el producto',
@@ -76,8 +110,23 @@ export const getProductById = async (req, res) => {
 
 export const createProduct = async (req, res) => {
   try {
+    let imagenes = [];
+    if (req.files && req.files.length > 0) {
+      imagenes = await uploadMultipleImages(req.files, 'feria-de-majo');
+    } else if (req.body.imagenes && req.body.imagenes.length > 0) {
+      imagenes = req.body.imagenes;
+    }
+
+    if (imagenes.length === 0) {
+      return res.status(400).json({
+        success: false,
+        message: 'Se requiere al menos una imagen'
+      });
+    }
+
     const productData = {
       ...req.body,
+      imagenes,
       nuevo: req.body.nuevo === 'true' || req.body.nuevo === true,
       destacado: req.body.destacado === 'true' || req.body.destacado === true
     };
@@ -85,13 +134,14 @@ export const createProduct = async (req, res) => {
     const product = new Product(productData);
     await product.save();
 
+    clearCache();
+
     res.status(201).json({
       success: true,
       message: 'Producto creado exitosamente',
       data: product
     });
   } catch (error) {
-    console.error('Error en createProduct:', error);
     res.status(500).json({
       success: false,
       message: 'Error al crear el producto',
@@ -112,8 +162,17 @@ export const updateProduct = async (req, res) => {
       });
     }
 
+    let imagenes = existingProduct.imagenes;
+    if (req.files && req.files.length > 0) {
+      const nuevasImagenes = await uploadMultipleImages(req.files, 'feria-de-majo');
+      imagenes = [...imagenes, ...nuevasImagenes];
+    } else if (req.body.imagenes) {
+      imagenes = req.body.imagenes;
+    }
+
     const updateData = {
       ...req.body,
+      imagenes,
       nuevo: req.body.nuevo === 'true' || req.body.nuevo === true,
       destacado: req.body.destacado === 'true' || req.body.destacado === true
     };
@@ -128,13 +187,14 @@ export const updateProduct = async (req, res) => {
       { new: true, runValidators: true }
     );
 
+    clearCache();
+
     res.json({
       success: true,
       message: 'Producto actualizado exitosamente',
       data: product
     });
   } catch (error) {
-    console.error('Error en updateProduct:', error);
     res.status(500).json({
       success: false,
       message: 'Error al actualizar el producto',
@@ -156,12 +216,13 @@ export const deleteProduct = async (req, res) => {
 
     await product.deleteOne();
 
+    clearCache();
+
     res.json({
       success: true,
       message: 'Producto eliminado exitosamente'
     });
   } catch (error) {
-    console.error('Error en deleteProduct:', error);
     res.status(500).json({
       success: false,
       message: 'Error al eliminar el producto',
@@ -173,7 +234,7 @@ export const deleteProduct = async (req, res) => {
 export const updateProductStatus = async (req, res) => {
   try {
     const { estado } = req.body;
-    const estadosValidos = ['disponible', 'reservado', 'archivado'];
+    const estadosValidos = ['disponible', 'reservado', 'archivado', 'vendido'];
 
     if (!estadosValidos.includes(estado)) {
       return res.status(400).json({
@@ -196,13 +257,14 @@ export const updateProductStatus = async (req, res) => {
       });
     }
 
+    clearCache();
+
     res.json({
       success: true,
       message: `Producto actualizado a: ${estado}`,
       data: product
     });
   } catch (error) {
-    console.error('Error en updateProductStatus:', error);
     res.status(500).json({
       success: false,
       message: 'Error al actualizar el estado',

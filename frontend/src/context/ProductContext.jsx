@@ -3,20 +3,46 @@ import { getProducts } from '../api/products';
 
 export const ProductContext = createContext();
 
+// Cache local para evitar recargas
+const CACHE_KEY = 'feria-de-majo-products';
+const CACHE_DURATION = 5 * 60 * 1000; // 5 minutos
+
 export const ProductProvider = ({ children }) => {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [filters, setFilters] = useState({});
-  const [selectedProductId, setSelectedProductId] = useState(null);
   const initialLoadDone = useRef(false);
 
-  const fetchProducts = useCallback(async () => {
+  const fetchProducts = useCallback(async (forceRefresh = false) => {
     try {
+      // Intentar cargar desde cache local primero
+      if (!forceRefresh) {
+        const cached = localStorage.getItem(CACHE_KEY);
+        if (cached) {
+          const { data, timestamp } = JSON.parse(cached);
+          if (Date.now() - timestamp < CACHE_DURATION) {
+            setProducts(data);
+            setLoading(false);
+            // Refrescar en segundo plano
+            setTimeout(() => fetchProducts(true), 100);
+            return;
+          }
+        }
+      }
+
       setLoading(true);
       setError(null);
       const response = await getProducts();
-      setProducts(response.data || []);
+      const productsData = response.data || [];
+      
+      // Guardar en cache
+      localStorage.setItem(CACHE_KEY, JSON.stringify({
+        data: productsData,
+        timestamp: Date.now()
+      }));
+      
+      setProducts(productsData);
     } catch (err) {
       setError('Error al cargar los productos');
     } finally {
@@ -44,20 +70,6 @@ export const ProductProvider = ({ children }) => {
       setFilters({ ...filters, [key]: value });
     }
   }, [filters]);
-
-  // Producto seleccionado
-  const selectedProduct = useMemo(() => {
-    if (!selectedProductId) return null;
-    return products.find(p => p._id === selectedProductId) || null;
-  }, [products, selectedProductId]);
-
-  const setSelectedProduct = useCallback((id) => {
-    setSelectedProductId(id);
-  }, []);
-
-  const clearSelectedProduct = useCallback(() => {
-    setSelectedProductId(null);
-  }, []);
 
   const filteredProducts = useMemo(() => {
     let result = [...products];
@@ -103,10 +115,7 @@ export const ProductProvider = ({ children }) => {
     clearFilters,
     updateFilter,
     filteredProducts,
-    refetch: fetchProducts,
-    selectedProduct,
-    setSelectedProduct,
-    clearSelectedProduct,
+    refetch: () => fetchProducts(true),
   };
 
   return (

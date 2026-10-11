@@ -18,15 +18,15 @@ const productSchema = new mongoose.Schema({
     required: [true, 'La categoría es obligatoria'],
     enum: {
       values: [
-        'vestidos', 
-        'blusas', 
-        'pantalones', 
-        'camperas', 
-        'tapados', 
+        'vestidos',
+        'blusas',
+        'pantalones',
+        'camperas',
+        'tapados',
         'carteras',
         'sweaters',
         'chaquetas',
-        'accesorios', 
+        'accesorios',
         'otros'
       ],
       message: 'Categoría no válida'
@@ -59,7 +59,7 @@ const productSchema = new mongoose.Schema({
   estado: {
     type: String,
     enum: {
-      values: ['disponible', 'reservado', 'archivado'],
+      values: ['disponible', 'reservado', 'archivado', 'vendido'],
       message: 'Estado no válido'
     },
     default: 'disponible'
@@ -87,10 +87,12 @@ const productSchema = new mongoose.Schema({
   toObject: { virtuals: true }
 });
 
+// Índices para búsquedas rápidas
 productSchema.index({ nombre: 'text', descripcion: 'text' });
 productSchema.index({ categoria: 1, talle: 1, color: 1 });
 productSchema.index({ estado: 1 });
 productSchema.index({ destacado: -1, orden: 1 });
+productSchema.index({ createdAt: -1 });
 
 const Product = mongoose.model('Product', productSchema);
 

@@ -18,11 +18,11 @@ const FloatingShare = () => {
   const title = 'Feria de Majo - Descubrí piezas con la mejor calidad y precio';
   const message = `Descubrí piezas con la mejor calidad y precio
 
-Prendas usadas de marca, en excelente estado y con la mejor calidad. Encontra piezas únicas con estilo y a precios increíbles. Te esperamos el sábado 19 de septiembre en nuestra feria.
+Prendas usadas de marca, en excelente estado y con la mejor calidad. Encontra piezas únicas con estilo y a precios increíbles. Te esperamos el sábado 17 de octubre en nuestra feria.
 
 ─────────────────
 📍 *Feria de Majo*
-📅 *Sábado 19 de septiembre*
+📅 *Sábado 17 de octubre*
 🕐 *11:00 a 18:00 hs*
 ─────────────────
 

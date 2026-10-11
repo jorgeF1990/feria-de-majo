@@ -47,6 +47,8 @@ const ProductModal = ({ isOpen, onClose, product }) => {
     switch (estado) {
       case 'reservado':
         return 'Reservado';
+      case 'vendido':
+        return 'Vendido';
       case 'archivado':
         return 'Archivado';
       default:
@@ -64,7 +66,6 @@ const ProductModal = ({ isOpen, onClose, product }) => {
         onClick={(e) => e.stopPropagation()}
       >
         <div className="flex flex-col md:flex-row h-full">
-          {/* Imagen */}
           <div className="relative md:w-3/5 bg-secondary-light/20">
             <div className="aspect-square md:aspect-auto md:h-[400px] lg:h-[500px] flex items-center justify-center p-2 sm:p-4">
               {imageList.length > 0 ? (
@@ -118,14 +119,15 @@ const ProductModal = ({ isOpen, onClose, product }) => {
 
             {estado !== 'disponible' && (
               <div className={`absolute top-2 sm:top-4 right-2 sm:right-4 text-white px-2 sm:px-4 py-1 sm:py-2 rounded-lg font-semibold uppercase text-[10px] sm:text-sm tracking-wider border border-white/20 backdrop-blur-sm ${
-                estado === 'reservado' ? 'bg-amber-600/80' : 'bg-gray-600/80'
+                estado === 'reservado' ? 'bg-amber-600/80' : 
+                estado === 'vendido' ? 'bg-blue-600/80' : 
+                'bg-gray-600/80'
               }`}>
                 {getStatusText()}
               </div>
             )}
           </div>
 
-          {/* Información */}
           <div className="md:w-2/5 p-4 sm:p-6 md:p-8 overflow-y-auto max-h-[40vh] md:max-h-none">
             <div className="flex justify-between items-start mb-3 sm:mb-4">
               <div>
@@ -151,13 +153,13 @@ const ProductModal = ({ isOpen, onClose, product }) => {
                   <span className="font-semibold text-xs sm:text-sm">Feria de Majo</span>
                 </div>
                 <p className="text-text-secondary text-[10px] sm:text-sm mt-0.5 sm:mt-1">
-                  Sabado 19 de septiembre · 2026
+                  Sábado 17 de octubre · 2026
                 </p>
                 <p className="text-text-secondary text-[10px] sm:text-sm">
                   Horario: 11:00 a 18:00 hs
                 </p>
                 <p className="text-text-light text-[8px] sm:text-xs mt-0.5 sm:mt-1">
-                  Consulta disponibilidad en el stand
+                  Consultá disponibilidad en el stand
                 </p>
               </div>
 
@@ -184,7 +186,8 @@ const ProductModal = ({ isOpen, onClose, product }) => {
                   <span className="text-[8px] sm:text-xs text-text-light uppercase tracking-wider">Estado</span>
                   <p className={`font-medium text-xs sm:text-sm ${
                     estado === 'disponible' ? 'text-emerald-600' : 
-                    estado === 'reservado' ? 'text-amber-600' : 'text-gray-500'
+                    estado === 'reservado' ? 'text-amber-600' : 
+                    estado === 'vendido' ? 'text-blue-600' : 'text-gray-500'
                   }`}>
                     {getStatusText()}
                   </p>

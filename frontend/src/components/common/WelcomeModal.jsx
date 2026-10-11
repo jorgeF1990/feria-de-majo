@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { FiX, FiCalendar, FiClock, FiMapPin, FiInfo, FiShoppingBag, FiArrowRight, FiGrid } from 'react-icons/fi';
+import { FiX, FiCalendar, FiClock, FiMapPin, FiGrid, FiShoppingBag, FiArrowRight } from 'react-icons/fi';
 
 const WelcomeModal = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -39,7 +39,6 @@ const WelcomeModal = () => {
         }`}
         onClick={(e) => e.stopPropagation()}
       >
-        {/* Header con gradiente */}
         <div className="bg-gradient-to-r from-primary-dark via-primary to-primary-light p-5 sm:p-6 text-white relative">
           <button
             onClick={handleClose}
@@ -60,16 +59,14 @@ const WelcomeModal = () => {
           </div>
         </div>
 
-        {/* Contenido */}
         <div className="p-4 sm:p-6 space-y-4 sm:space-y-5">
-          {/* Fecha y horario */}
           <div className="grid grid-cols-2 gap-2 sm:gap-3">
             <div className="bg-primary/5 rounded-xl p-3 sm:p-4 text-center border border-primary/10">
               <div className="flex items-center justify-center gap-1.5 sm:gap-2 text-primary mb-0.5 sm:mb-1">
                 <FiCalendar className="text-base sm:text-lg" />
                 <span className="font-semibold text-xs sm:text-sm">Fecha</span>
               </div>
-              <p className="text-text-primary font-medium text-sm sm:text-base">Sábado 19 de septiembre</p>
+              <p className="text-text-primary font-medium text-sm sm:text-base">Sábado 17 de octubre</p>
               <p className="text-text-light text-xs sm:text-sm">2026</p>
             </div>
             <div className="bg-primary/5 rounded-xl p-3 sm:p-4 text-center border border-primary/10">
@@ -82,7 +79,6 @@ const WelcomeModal = () => {
             </div>
           </div>
 
-          {/* Ubicación */}
           <div className="bg-secondary-light/30 rounded-xl p-3 sm:p-4 flex items-center gap-3 border border-secondary-light/50">
             <div className="w-8 h-8 sm:w-10 sm:h-10 bg-primary/10 rounded-full flex items-center justify-center flex-shrink-0">
               <FiMapPin className="text-primary text-base sm:text-lg" />
@@ -93,7 +89,6 @@ const WelcomeModal = () => {
             </div>
           </div>
 
-          {/* Mensaje especial con lista de productos */}
           <div className="bg-amber-50/80 rounded-xl p-3 sm:p-4 border border-amber-200/50">
             <div className="flex items-start gap-2.5 sm:gap-3">
               <div className="w-7 h-7 sm:w-8 sm:h-8 bg-amber-100 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
@@ -107,7 +102,7 @@ const WelcomeModal = () => {
                 <div className="flex flex-wrap gap-1.5 mt-2">
                   <span className="bg-amber-100/70 text-text-secondary text-[10px] sm:text-xs px-2.5 py-1 rounded-full">Carteras</span>
                   <span className="bg-amber-100/70 text-text-secondary text-[10px] sm:text-xs px-2.5 py-1 rounded-full">Bufandas</span>
-                  <span className="bg-amber-100/70 text-text-secondary text-[10px] sm:text-xs px-2.5 py-1 rounded-full">Sweaters</span>
+                  <span className="bg-amber-100/70 text-text-secondary text-[10px] sm:text-xs py-1 px-2.5 rounded-full">Sweaters</span>
                   <span className="bg-amber-100/70 text-text-secondary text-[10px] sm:text-xs px-2.5 py-1 rounded-full">Remeras</span>
                   <span className="bg-amber-100/70 text-text-secondary text-[10px] sm:text-xs px-2.5 py-1 rounded-full">Chaquetas</span>
                   <span className="bg-amber-100/70 text-text-secondary text-[10px] sm:text-xs px-2.5 py-1 rounded-full">Vestidos</span>
@@ -121,7 +116,6 @@ const WelcomeModal = () => {
             </div>
           </div>
 
-          {/* Botón de cierre */}
           <button
             onClick={handleClose}
             className="w-full btn-primary flex items-center justify-center gap-2 py-2.5 sm:py-3 text-sm sm:text-base"

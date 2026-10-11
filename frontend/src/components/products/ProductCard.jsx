@@ -18,6 +18,8 @@ const ProductCard = ({ product, onClick }) => {
     switch (estado) {
       case 'reservado':
         return 'bg-amber-50 text-amber-700';
+      case 'vendido':
+        return 'bg-blue-50 text-blue-700';
       case 'archivado':
         return 'bg-gray-100 text-gray-600';
       default:
@@ -29,6 +31,8 @@ const ProductCard = ({ product, onClick }) => {
     switch (estado) {
       case 'reservado':
         return 'Reservado';
+      case 'vendido':
+        return 'Vendido';
       case 'archivado':
         return 'Archivado';
       default:
@@ -59,6 +63,7 @@ const ProductCard = ({ product, onClick }) => {
             alt={nombre}
             className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
             loading="lazy"
+            decoding="async"
             onError={(e) => {
               e.target.style.display = 'none';
               e.target.parentElement.innerHTML = `
@@ -83,9 +88,13 @@ const ProductCard = ({ product, onClick }) => {
         {estado !== 'disponible' && (
           <div className="absolute inset-0 bg-black/30 backdrop-blur-[2px] flex items-center justify-center">
             <span className={`text-white font-bold text-xs sm:text-base uppercase tracking-widest px-3 sm:px-6 py-1.5 sm:py-3 rounded-lg border-2 border-white/30 backdrop-blur-sm ${
-              estado === 'reservado' ? 'bg-amber-600/80' : 'bg-gray-600/80'
+              estado === 'reservado' ? 'bg-amber-600/80' : 
+              estado === 'vendido' ? 'bg-blue-600/80' : 
+              'bg-gray-600/80'
             }`}>
-              {estado === 'reservado' ? 'Reservado' : 'Archivado'}
+              {estado === 'reservado' ? 'Reservado' : 
+               estado === 'vendido' ? 'Vendido' : 
+               'Archivado'}
             </span>
           </div>
         )}
