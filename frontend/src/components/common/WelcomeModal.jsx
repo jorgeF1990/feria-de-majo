@@ -54,7 +54,7 @@ const WelcomeModal = () => {
             </div>
             <div>
               <h2 className="text-xl sm:text-2xl font-light">Feria de Majo</h2>
-              <p className="text-white/80 text-xs sm:text-sm font-light">La Mejor Calidad Y Precio</p>
+              <p className="text-white/80 text-xs sm:text-sm font-light">Nueva edición</p>
             </div>
           </div>
         </div>
@@ -102,7 +102,7 @@ const WelcomeModal = () => {
                 <div className="flex flex-wrap gap-1.5 mt-2">
                   <span className="bg-amber-100/70 text-text-secondary text-[10px] sm:text-xs px-2.5 py-1 rounded-full">Carteras</span>
                   <span className="bg-amber-100/70 text-text-secondary text-[10px] sm:text-xs px-2.5 py-1 rounded-full">Bufandas</span>
-                  <span className="bg-amber-100/70 text-text-secondary text-[10px] sm:text-xs py-1 px-2.5 rounded-full">Sweaters</span>
+                  <span className="bg-amber-100/70 text-text-secondary text-[10px] sm:text-xs px-2.5 py-1 rounded-full">Sweaters</span>
                   <span className="bg-amber-100/70 text-text-secondary text-[10px] sm:text-xs px-2.5 py-1 rounded-full">Remeras</span>
                   <span className="bg-amber-100/70 text-text-secondary text-[10px] sm:text-xs px-2.5 py-1 rounded-full">Chaquetas</span>
                   <span className="bg-amber-100/70 text-text-secondary text-[10px] sm:text-xs px-2.5 py-1 rounded-full">Vestidos</span>

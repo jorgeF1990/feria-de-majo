@@ -138,14 +138,13 @@ const HomeContent = () => {
               </div>
 
               <h1 className="text-4xl md:text-6xl font-light leading-tight mb-4">
-                <span className="block">Descubrí piezas</span>
-                <span className="font-semibold text-white">con la mejor calidad y precio</span>
+                <span className="block">Nueva edición</span>
+                <span className="font-semibold text-white">de Feria de Majo</span>
               </h1>
               
               <p className="text-white/80 text-lg font-light mb-8 max-w-xl">
-                Prendas usadas de marca, en excelente estado y con la mejor calidad. 
-                Encontra piezas únicas con estilo y a precios increíbles. 
-                Te esperamos el sábado 17 de octubre en nuestra feria.
+                Encontrá carteras, bufandas, sweaters, remeras, vestidos, pantalones, camperas, tapados y mucho más.
+                Todo de marca, en excelente estado, a precios increíbles.
               </p>
 
               <button 

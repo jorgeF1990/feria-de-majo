@@ -15,18 +15,23 @@ const FloatingShare = () => {
   const [isOpen, setIsOpen] = useState(false);
   const url = typeof window !== 'undefined' ? window.location.href : '';
   
-  const title = 'Feria de Majo - Descubrí piezas con la mejor calidad y precio';
-  const message = `Descubrí piezas con la mejor calidad y precio
+  const title = 'Feria de Majo - Nueva edición';
+  
+  // SIN URL al final - react-share la agrega automáticamente
+  const message = `Nueva edición de Feria de Majo
 
-Prendas usadas de marca, en excelente estado y con la mejor calidad. Encontra piezas únicas con estilo y a precios increíbles. Te esperamos el sábado 17 de octubre en nuestra feria.
+Sábado 17 de octubre
+11:00 a 18:00 hs
 
-─────────────────
-📍 *Feria de Majo*
-📅 *Sábado 17 de octubre*
-🕐 *11:00 a 18:00 hs*
-─────────────────
+Encontrá:
+Carteras - Bufandas - Sweaters - Remeras
+Vestidos - Pantalones - Camperas - Tapados
+Y mucho más
 
-${url}`;
+Todo de marca, en excelente estado
+Precios increíbles
+
+Te esperamos`;
 
   return (
     <div className="fixed bottom-6 right-6 z-50">

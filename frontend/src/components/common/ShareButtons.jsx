@@ -19,22 +19,32 @@ const ShareButtons = ({ product, className = '' }) => {
   
   const title = `${product.nombre} - Feria de Majo`;
 
+  // SIN URL al final - react-share la agrega automáticamente
   const whatsappMessage = `*${product.nombre}*
 
 ${product.descripcion}
 
-📋 *Categoría:* ${product.categoria}
-👕 *Talle:* ${product.talle.toUpperCase()}
-🎨 *Color:* ${product.color}${product.material ? `\n🧵 *Material:* ${product.material}` : ''}
+Categoría: ${product.categoria}
+Talle: ${product.talle.toUpperCase()}
+Color: ${product.color}${product.material ? `\nMaterial: ${product.material}` : ''}
 
 ─────────────────
-📍 *Feria de Majo*
-📅 *Sábado 17 de octubre*
-🕐 *11:00 a 18:00 hs*
+Nueva edición de Feria de Majo
+Sábado 17 de octubre
+11:00 a 18:00 hs
 ─────────────────
 
-${productUrl}`;
+Encontrá:
+Carteras - Bufandas - Sweaters - Remeras
+Vestidos - Pantalones - Camperas - Tapados
+Y mucho más
 
+Todo de marca, en excelente estado
+Precios increíbles
+
+Te esperamos`;
+
+  // SIN URL al final - react-share la agrega automáticamente
   const emailBody = `Te comparto esta prenda de la Feria de Majo:
 
 ${product.nombre}
@@ -45,12 +55,20 @@ Talle: ${product.talle.toUpperCase()}
 Color: ${product.color}${product.material ? `\nMaterial: ${product.material}` : ''}
 
 ─────────────────
-📍 Feria de Majo
-📅 Sábado 17 de octubre
-🕐 11:00 a 18:00 hs
+Nueva edición de Feria de Majo
+Sábado 17 de octubre
+11:00 a 18:00 hs
 ─────────────────
 
-${productUrl}`;
+Encontrá:
+Carteras - Bufandas - Sweaters - Remeras
+Vestidos - Pantalones - Camperas - Tapados
+Y mucho más
+
+Todo de marca, en excelente estado
+Precios increíbles
+
+Te esperamos`;
 
   return (
     <div className={`flex flex-wrap items-center gap-2 ${className}`}>
