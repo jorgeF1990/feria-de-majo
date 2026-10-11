@@ -9,18 +9,26 @@ import {
   FiCloud,
   FiLoader
 } from 'react-icons/fi';
-import { getProducts, createProduct, updateProduct, deleteProduct, updateProductStatus } from '../api/products';
+import { getProducts, createProduct, updateProduct, deleteProduct } from '../api/products';
 import { uploadMultipleToCloudinary } from '../api/upload';
 import { useProducts } from '../hooks/useProducts';
 
 const Admin = () => {
-  const { refetch } = useProducts();
+  const { 
+    refetch, 
+    updateProductStatusOptimistic,
+    updateProductLocal,
+    addProductLocal,
+    removeProductLocal
+  } = useProducts();
+  
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingProduct, setEditingProduct] = useState(null);
   const [uploading, setUploading] = useState(false);
   const [uploadProgress, setUploadProgress] = useState(0);
+  const [statusUpdating, setStatusUpdating] = useState({});
   const fileInputRef = useRef(null);
   const [formData, setFormData] = useState({
     nombre: '',
@@ -151,15 +159,22 @@ const Admin = () => {
       };
 
       if (editingProduct) {
-        await updateProduct(editingProduct._id, data);
+        const response = await updateProduct(editingProduct._id, data);
+        // Actualizar localmente sin recargar todo
+        if (response?.data) {
+          updateProductLocal(editingProduct._id, response.data);
+        }
         alert('Producto actualizado exitosamente');
       } else {
-        await createProduct(data);
+        const response = await createProduct(data);
+        // Agregar localmente sin recargar todo
+        if (response?.data) {
+          addProductLocal(response.data);
+        }
         alert('Producto creado exitosamente');
       }
       
       handleCloseModal();
-      await refetch();
       await fetchProducts();
       
     } catch (error) {
@@ -171,22 +186,37 @@ const Admin = () => {
     if (window.confirm('¿Estás seguro de eliminar este producto?')) {
       try {
         await deleteProduct(id);
+        // Eliminar localmente sin recargar todo
+        removeProductLocal(id);
+        setProducts(prev => prev.filter(p => p._id !== id));
         alert('Producto eliminado');
-        await refetch();
-        await fetchProducts();
       } catch (error) {
         alert('Error al eliminar el producto');
       }
     }
   };
 
+  // CAMBIO OPTIMISTA DE ESTADO - Cambia al instante en la UI
   const handleStatusChange = async (id, newStatus) => {
-    try {
-      await updateProductStatus(id, newStatus);
-      await refetch();
-      await fetchProducts();
-    } catch (error) {
-      alert('Error al actualizar el estado');
+    // Actualizar la UI inmediatamente (sin esperar al servidor)
+    setProducts(prev => 
+      prev.map(p => p._id === id ? { ...p, estado: newStatus } : p)
+    );
+
+    // Marcar como "actualizando" para mostrar feedback
+    setStatusUpdating(prev => ({ ...prev, [id]: true }));
+
+    // Enviar al servidor en segundo plano
+    const result = await updateProductStatusOptimistic(id, newStatus);
+    
+    setStatusUpdating(prev => ({ ...prev, [id]: false }));
+
+    if (!result.success) {
+      // Si falló, revertir el cambio local
+      setProducts(prev => 
+        prev.map(p => p._id === id ? { ...p, estado: result.previousStatus || p.estado } : p)
+      );
+      alert('Error al actualizar el estado. Intentá de nuevo.');
     }
   };
 
@@ -262,21 +292,26 @@ const Admin = () => {
                       </span>
                     </td>
                     <td className="px-4 py-3">
-                      <select
-                        value={product.estado}
-                        onChange={(e) => handleStatusChange(product._id, e.target.value)}
-                        className={`text-xs font-semibold px-3 py-1 rounded-full border-0 focus:ring-2 focus:ring-primary ${
-                          product.estado === 'disponible' ? 'bg-emerald-50 text-emerald-700' :
-                          product.estado === 'reservado' ? 'bg-amber-50 text-amber-700' :
-                          product.estado === 'vendido' ? 'bg-blue-50 text-blue-700' :
-                          'bg-gray-100 text-gray-600'
-                        }`}
-                      >
-                        <option value="disponible">Disponible</option>
-                        <option value="reservado">Reservado</option>
-                        <option value="vendido">Vendido</option>
-                        <option value="archivado">Archivado</option>
-                      </select>
+                      <div className="relative">
+                        <select
+                          value={product.estado}
+                          onChange={(e) => handleStatusChange(product._id, e.target.value)}
+                          disabled={statusUpdating[product._id]}
+                          className={`text-xs font-semibold px-3 py-1 rounded-full border-0 focus:ring-2 focus:ring-primary transition-opacity ${
+                            statusUpdating[product._id] ? 'opacity-50 cursor-wait' : ''
+                          } ${
+                            product.estado === 'disponible' ? 'bg-emerald-50 text-emerald-700' :
+                            product.estado === 'reservado' ? 'bg-amber-50 text-amber-700' :
+                            product.estado === 'vendido' ? 'bg-blue-50 text-blue-700' :
+                            'bg-gray-100 text-gray-600'
+                          }`}
+                        >
+                          <option value="disponible">Disponible</option>
+                          <option value="reservado">Reservado</option>
+                          <option value="vendido">Vendido</option>
+                          <option value="archivado">Archivado</option>
+                        </select>
+                      </div>
                     </td>
                     <td className="px-4 py-3">
                       <div className="flex gap-2">
@@ -329,7 +364,10 @@ const Admin = () => {
                       <select
                         value={product.estado}
                         onChange={(e) => handleStatusChange(product._id, e.target.value)}
-                        className={`text-xs font-semibold px-2 py-0.5 rounded-full border-0 focus:ring-2 focus:ring-primary ${
+                        disabled={statusUpdating[product._id]}
+                        className={`text-xs font-semibold px-2 py-0.5 rounded-full border-0 focus:ring-2 focus:ring-primary transition-opacity ${
+                          statusUpdating[product._id] ? 'opacity-50 cursor-wait' : ''
+                        } ${
                           product.estado === 'disponible' ? 'bg-emerald-50 text-emerald-700' :
                           product.estado === 'reservado' ? 'bg-amber-50 text-amber-700' :
                           product.estado === 'vendido' ? 'bg-blue-50 text-blue-700' :
